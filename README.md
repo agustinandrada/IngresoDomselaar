@@ -64,7 +64,7 @@ Start the server
 
 ## Logos
 
-![App Screenshot](https://i.ibb.co/7jy2dpx/Huemul-Solutions.png)
+![App Screenshot](https://ibb.co/pbXJBK6)
 
 ![App Screenshot](https://ingresodomselaar.com.ar/img/logo-estancias-sistema.png)
 
