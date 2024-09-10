@@ -1,6 +1,12 @@
 
 # Ingreso Domselaar
 
+![App Screenshot](https://i.postimg.cc/wTkMSBJg/Huemul-Solutions.png)
+
+![App Screenshot](https://ingresodomselaar.com.ar/img/logo-estancias-sistema.png)
+
+![App Screenshot](https://www.argdg.com/assets/img/logo-argdg.png)
+
 Sistema de Ingreso para barrios privados a partir del DNI de los residentes, para el uso de los guardias de seguridad.
 
 
@@ -62,11 +68,4 @@ Start the server
 ```
 
 
-## Logos
-
-![App Screenshot](https://i.postimg.cc/wTkMSBJg/Huemul-Solutions.png)
-
-![App Screenshot](https://ingresodomselaar.com.ar/img/logo-estancias-sistema.png)
-
-![App Screenshot](https://www.argdg.com/assets/img/logo-argdg.png)
 
