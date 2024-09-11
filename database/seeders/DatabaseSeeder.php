@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Owner;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -35,5 +36,9 @@ class DatabaseSeeder extends Seeder
             'phone' => "1138078298",
             'user' => "12345678",
         ]);
+
+        User::factory(20)->create();
+
+        Owner::factory(20)->create();
     }
 }

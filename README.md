@@ -12,9 +12,9 @@ Sistema de Ingreso para barrios privados a partir del DNI de los residentes, par
 
 ## Tech Stack
 
-**Client:** Blade, BootstrapCSS
+**Client:** PHP, Javascript ,Blade, BootstrapCSS
 
-**Server:** Laravel
+**Server:** PHP, Laravel
 
 
 ## Authors

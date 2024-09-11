@@ -6,8 +6,11 @@
         <div class="collapse navbar-collapse" id="navcol-5">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-home"></i>&nbsp;Propietarios</a>
+                <li class="nav-item"><a class="nav-link" href="{{ route('owner-list') }}"><i
+                            class="fa fa-home"></i>&nbsp;Propietarios</a>
                 </li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-users"
+                            style="font-size: 17px;"></i>&nbsp;Autorizados</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i
                             class="fa fa-handshake-o"></i>&nbsp;Inquilinos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-car"></i>&nbsp;Visitas</a></li>

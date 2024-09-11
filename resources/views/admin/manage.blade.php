@@ -39,7 +39,8 @@
                         <table class="table table-striped tablesorter" id="ipi-table">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th class="text-start">Usuario</th>
+                                    <th class="text-start">ID</th>
+                                    <th class="text-start">DNI</th>
                                     <th class="text-start">Nombre</th>
                                     <th class="text-start">apellido</th>
                                     <th class="text-start">email</th>
@@ -51,6 +52,7 @@
                                 <tbody class="text-center">
                                     <tr>
                                         <td class="text-start">{{ $user->id }}</td>
+                                        <td class="text-start">{{ $user->user }}</td>
                                         <td class="text-start">{{ $user->name }}</td>
                                         <td class="text-start">{{ $user->last_name }}</td>
                                         <td class="text-start">{{ $user->email }}</td>

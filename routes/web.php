@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OwnerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -35,4 +36,8 @@ Route::prefix('estancias')->group(function () {
     Route::post('password/reset', [AuthController::class, 'reset'])->name('password.update');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(\App\Http\Middleware\ReloadCache::class);
+
+    //* OWNER ROUTES */
+
+    Route::get('owner-list', [OwnerController::class, 'index'])->name('owner-list');
 });
