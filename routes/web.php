@@ -40,4 +40,10 @@ Route::prefix('estancias')->group(function () {
     //* OWNER ROUTES */
 
     Route::get('owner-list', [OwnerController::class, 'index'])->name('owner-list');
+    Route::get('create-owner', [OwnerController::class, 'create'])->name('create-owner');
+    Route::get('edit-owner/{id}', [OwnerController::class, 'edit'])->name('edit-owner');
+    Route::get('view-owner/{id}', [OwnerController::class, 'view'])->name('view-owner');
+    Route::post('store-owner', [OwnerController::class, 'store'])->name('store-owner');
+    Route::post('delete-owner/{id}', [OwnerController::class, 'delete'])->name('delete-owner');
+    Route::post('update-owner/{id}', [OwnerController::class, 'update'])->name('update-owner');
 });

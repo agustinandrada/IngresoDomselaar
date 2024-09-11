@@ -21,7 +21,7 @@ Sistema de Ingreso para barrios privados a partir del DNI de los residentes, par
 
 - [@agustinandrada](https://www.github.com/agustinandrada) -> Developer, Backend, Database and Deploy
 
-- [Argento Alfredo](https://www.argdg.com) - Product Owner, Dessigner and Frontend
+- [Argento Alfredo](https://www.argdg.com) -> Product Owner, Designer and Frontend
 
 
 ## Documentation

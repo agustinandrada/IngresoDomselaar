@@ -15,6 +15,13 @@ class Owner extends Model
         'dni',
         'lot',
         'email',
+        'phone',
+        'vehicle',
+        'carModel',
+        'plate',
+        'photo',
+        'color',
+        'observation',
     ];
 
     protected function casts(): array
@@ -25,6 +32,13 @@ class Owner extends Model
             'dni' => 'string',
             'lot' => 'integer',
             'email' => 'string',
+            'phone' => 'string',
+            'vehicle' => 'string',
+            'carModel' => 'string',
+            'plate' => 'string',
+            'photo' => 'string',
+            'color' => 'string',
+            'observation' => 'string',
         ];
     }
 }

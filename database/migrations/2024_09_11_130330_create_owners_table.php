@@ -18,6 +18,13 @@ return new class extends Migration
             $table->string('dni');
             $table->string('lot');
             $table->string('email');
+            $table->string('phone');
+            $table->string('vehicle');
+            $table->string('carModel');
+            $table->string('plate');
+            $table->string('photo')->nullable();
+            $table->string('color');
+            $table->string('observation')->nullable();
             $table->timestamps();
         });
     }

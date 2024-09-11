@@ -20,9 +20,16 @@ class OwnerFactory extends Factory
         return [
             'name' => fake()->name(),
             'last_name' => fake()->lastName(),
-            'dni' => Str::random(8),
-            'lot' => fake()->randomNumber(8),
+            'dni' => fake()->randomNumber(8),
+            'lot' => fake()->randomNumber(4),
             'email' => fake()->unique()->safeEmail(),
+            'phone' => fake()->phoneNumber(),
+            'vehicle' => fake()->word(),
+            'carModel' => fake()->word(),
+            'plate' => fake()->word(),
+            'photo' => null,
+            'color' => fake()->word(),
+            'observation' => fake()->word(),
         ];
     }
 }

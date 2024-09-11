@@ -38,6 +38,7 @@ class OwnerController extends Controller
     {
         if ($request->filter != null) {
             $filter = $request->filter;
+            $search = $request->search;
             switch ($filter) {
                 case 'dni':
                     $owners = $this->ownerService->getByDni($request->search);
@@ -54,11 +55,44 @@ class OwnerController extends Controller
             }
         } else {
             $owners = $this->ownerService->getOwners();
-            $filter = null;
+            $filter = 'dni';
+            $search = '';
         }
-        if ($owners == null) {
-            $owners = 0;
-        }
-        return view('admin.owner-list', compact('owners', 'filter'));
+        return view('admin.owner-list', compact('owners', 'filter', 'search'));
     }
+
+    public function create()
+    {
+        return view('admin.owner-create');
+    }
+
+    public function store(Request $request)
+    {
+        $this->ownerService->createOwner($request);
+        return redirect()->route('owner-list')->with('success', 'Propietario creado correctamente');
+    }
+
+    public function delete($id)
+    {
+        $this->ownerService->deleteOwner($id);
+        return redirect()->route('owner-list')->with('success', 'Propietario eliminado correctamente');
+    }
+
+    // public function edit($id)
+    // {
+    //     $owner = $this->ownerService->getOwner($id);
+    //     return view('admin.owner-edit', compact('owner'));
+    // }
+
+    // public function update(Request $request, $id)
+    // {
+    //     $this->ownerService->updateOwner($request, $id);
+    //     return redirect()->route('owner.index');
+    // }
+
+    // public function view($id)
+    // {
+    //     $owner = $this->ownerService->getOwner($id);
+    //     return view('admin.owner-view', compact('owner'));
+    // }
 }

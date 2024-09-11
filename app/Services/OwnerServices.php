@@ -14,6 +14,12 @@ class OwnerServices
         $this->ownerProvider = $ownerProvider;
     }
 
+
+    public function getOwner($id)
+    {
+        return $this->ownerProvider->getOwner($id);
+    }
+
     public function getOwners()
     {
         return $this->ownerProvider->getOwners();
@@ -32,5 +38,15 @@ class OwnerServices
     public function getByName($name)
     {
         return $this->ownerProvider->getByName($name);
+    }
+
+    public function createOwner($request)
+    {
+        $this->ownerProvider->createOwner($request);
+    }
+
+    public function deleteOwner($request)
+    {
+        $this->ownerProvider->deleteOwner($request);
     }
 }
