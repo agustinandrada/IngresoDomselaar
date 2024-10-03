@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Owner extends Model
+class Tenant extends Model
 {
     use HasFactory;
 
@@ -14,13 +14,13 @@ class Owner extends Model
         'last_name',
         'dni',
         'lot',
-        'email',
         'phone',
+        'owner',
         'vehicle',
         'carModel',
         'plate',
-        'photo',
         'color',
+        'dateDelete',
         'observation',
     ];
 
@@ -31,13 +31,14 @@ class Owner extends Model
             'last_name' => 'string',
             'dni' => 'string',
             'lot' => 'string',
-            'email' => 'string',
             'phone' => 'string',
+            'owner' => 'string',
             'vehicle' => 'string',
             'carModel' => 'string',
             'plate' => 'string',
-            'photo' => 'string',
             'color' => 'string',
+            'since' => 'string',
+            'until' => 'string',
             'observation' => 'string',
         ];
     }

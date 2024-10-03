@@ -71,7 +71,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->usersService->storeUser($request);
+        $validator = $this->usersService->storeUser($request);
+
+        if ($validator !== true) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         return redirect()->route('manage-users')->with('success', 'Usuario creado correctamente');
     }
 
@@ -102,11 +107,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $updateUser = $this->usersService->updateUser($request, $id);
-        if ($updateUser == 'ok') {
-            return redirect()->route('manage-users')->with('success', 'Usuario actualizado correctamente');
+        $validator = $this->usersService->updateUser($request, $id);
+
+        if ($validator !== true) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
-        return redirect()->route('manage-users')->with('error', 'Error al actualizar el usuario');
+
+        return redirect()->route('manage-users')->with('success', 'Usuario actualizado correctamente');
     }
 
     /**

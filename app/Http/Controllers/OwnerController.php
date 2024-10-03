@@ -58,17 +58,20 @@ class OwnerController extends Controller
             $filter = 'dni';
             $search = '';
         }
-        return view('admin.owner-list', compact('owners', 'filter', 'search'));
+        return view('admin.owner.list', compact('owners', 'filter', 'search'));
     }
 
     public function create()
     {
-        return view('admin.owner-create');
+        return view('admin.owner.create');
     }
 
     public function store(Request $request)
     {
-        $this->ownerService->createOwner($request);
+        $validator = $this->ownerService->createOwner($request);
+        if ($validator !== true) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         return redirect()->route('owner-list')->with('success', 'Propietario creado correctamente');
     }
 
@@ -78,21 +81,24 @@ class OwnerController extends Controller
         return redirect()->route('owner-list')->with('success', 'Propietario eliminado correctamente');
     }
 
-    // public function edit($id)
-    // {
-    //     $owner = $this->ownerService->getOwner($id);
-    //     return view('admin.owner-edit', compact('owner'));
-    // }
+    public function edit($id)
+    {
+        $owner = $this->ownerService->getOwner($id);
+        return view('admin.owner.edit', compact('owner'));
+    }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $this->ownerService->updateOwner($request, $id);
-    //     return redirect()->route('owner.index');
-    // }
+    public function update(Request $request, $id)
+    {
+        $validator = $this->ownerService->updateOwner($request, $id);
+        if ($validator !== true) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        return redirect()->route('owner-list')->with('success', 'Propietario actualizado correctamente');
+    }
 
-    // public function view($id)
-    // {
-    //     $owner = $this->ownerService->getOwner($id);
-    //     return view('admin.owner-view', compact('owner'));
-    // }
+    public function view($id)
+    {
+        $owner = $this->ownerService->getOwner($id);
+        return view('admin.owner.view', compact('owner'));
+    }
 }

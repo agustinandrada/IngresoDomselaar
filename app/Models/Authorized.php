@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Owner extends Model
+class Authorized extends Model
 {
     use HasFactory;
 
@@ -15,13 +15,13 @@ class Owner extends Model
         'dni',
         'lot',
         'email',
-        'phone',
         'vehicle',
         'carModel',
         'plate',
         'photo',
         'color',
         'observation',
+        'owner' => 'string',
     ];
 
     protected function casts(): array
@@ -32,13 +32,13 @@ class Owner extends Model
             'dni' => 'string',
             'lot' => 'string',
             'email' => 'string',
-            'phone' => 'string',
             'vehicle' => 'string',
             'carModel' => 'string',
             'plate' => 'string',
             'photo' => 'string',
             'color' => 'string',
             'observation' => 'string',
+            'owner' => 'string',
         ];
     }
 }

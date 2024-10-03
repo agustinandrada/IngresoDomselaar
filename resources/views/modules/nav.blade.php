@@ -1,19 +1,21 @@
 <nav class="navbar navbar-expand-md bg-dark py-3" data-bs-theme="dark">
-    <div class="container-fluid"><a class="navbar-brand d-flex align-items-center" href="#"><img class="img-fluid"
-                src="{{ asset('img/logo-estancias-sistema.png') }}" width="161" height="78"></a><button
-            data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span
-                class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+    <div class="container-fluid"><a class="navbar-brand d-flex align-items-center" href="/estancias/dashboard"><img
+                class="img-fluid" src="{{ asset('img/logo-estancias-sistema.png') }}" width="161"
+                height="78"></a><button data-bs-toggle="collapse" class="navbar-toggler"
+            data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span
+                class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navcol-5">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/estancias/dashboard">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('owner-list') }}"><i
                             class="fa fa-home"></i>&nbsp;Propietarios</a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-users"
+                <li class="nav-item"><a class="nav-link" href="{{ route('authorized-list') }}"><i class="fa fa-users"
                             style="font-size: 17px;"></i>&nbsp;Autorizados</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i
+                <li class="nav-item"><a class="nav-link" href="{{ route('tenant-list') }}"><i
                             class="fa fa-handshake-o"></i>&nbsp;Inquilinos</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-car"></i>&nbsp;Visitas</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('visitor-list') }}"><i
+                            class="fa fa-car"></i>&nbsp;Visitas</a></li>
                 <li class="nav-item"><a class="nav-link" href="registros.html"><i
                             class="fa fa-id-card"></i>&nbsp;Historiasl de Registros</a></li>
                 <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false"

@@ -2,12 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Authorized;
-use App\Models\Owner;
-use Illuminate\Support\Facades\DB;
+use App\Models\Tenant;
+use App\Rules\MaxEntries;
 use Illuminate\Validation\Rule;
 
-class OwnerProvider
+class TenantProvider
 {
     protected UsersProvider $usersProvider;
 
@@ -15,27 +14,27 @@ class OwnerProvider
     {
         $this->usersProvider = $usersProvider;
     }
-    public function getOwners()
+    public function getTenants()
     {
-        $owners = Owner::orderBy('created_at', 'desc')->paginate(10);
-        return $owners;
+        $tenants = Tenant::orderBy('created_at', 'desc')->paginate(10);
+        return $tenants;
     }
 
     public function getByDni($dni)
     {
-        $owner = Owner::where('dni', $dni)->orderBy('created_at', 'desc')->paginate(10);
-        return $owner;
+        $tenant = Tenant::where('dni', $dni)->orderBy('created_at', 'desc')->paginate(10);
+        return $tenant;
     }
 
     public function getByLot($lot)
     {
-        $owner = Owner::where('lot', $lot)->orderBy('created_at', 'desc')->paginate(10);
-        return $owner;
+        $tenant = Tenant::where('lot', $lot)->orderBy('created_at', 'desc')->paginate(10);
+        return $tenant;
     }
 
     public function getByName($name)
     {
-        $owners = Owner::where(function ($query) use ($name) {
+        $tenants = Tenant::where(function ($query) use ($name) {
             $query->where('name', 'like', "%{$name}%")
                 ->orWhere('last_name', 'like', "%{$name}%")
                 ->orWhereRaw("CONCAT(name, ' ', last_name) LIKE ?", "%{$name}%");
@@ -43,39 +42,37 @@ class OwnerProvider
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return $owners;
+        return $tenants;
     }
 
 
-    public function getOwner($id)
+    public function getTenant($id)
     {
-        $owner = Owner::find($id);
-        return $owner;
+        $tenant = Tenant::find($id);
+        return $tenant;
     }
 
-    public function createOwner($request)
+    public function createTenant($request)
     {
         $validator = $this->validateData($request);
-
         if ($validator->fails()) {
             return $validator->errors();
         }
-
-        $owner = new Owner();
-        $owner->lot = $request->lot;
-        $owner->name = $request->name;
-        $owner->last_name = $request->last_name;
-        $owner->dni = $request->dni;
-        $owner->email = $request->email;
-        $owner->phone = $request->phone;
-        $owner->vehicle = $request->vehicle;
-        $owner->carModel = $request->model;
-        $owner->color = $request->color;
-        $owner->plate = $request->plate;
-        $owner->photo = $this->usersProvider->processPhoto($request);
-        $owner->observation = $request->observation ?? '';
-        $owner->save();
-
+        $tenant = new Tenant();
+        $tenant->lot = $request->lot;
+        $tenant->name = $request->name;
+        $tenant->last_name = $request->last_name;
+        $tenant->dni = $request->dni;
+        $tenant->phone = $request->phone;
+        $tenant->owner = $request->owner;
+        $tenant->vehicle = $request->vehicle;
+        $tenant->carModel = $request->model;
+        $tenant->color = $request->color;
+        $tenant->plate = $request->plate;
+        $tenant->since = $request->since;
+        $tenant->until = $request->until;
+        $tenant->observation = $request->observations ?? '';
+        $tenant->save();
         return true;
     }
 
@@ -87,13 +84,14 @@ class OwnerProvider
                 'lot' => 'required',
                 'name' => 'required',
                 'last_name' => 'required',
-                'dni' => 'required|unique:owners',
-                'email' => 'required',
-                'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'dni' =>  'required | unique:tenants,dni',
+                'owner' => 'required',
                 'phone' => 'required',
                 'vehicle' => 'required',
                 'model' => 'required',
                 'color' => 'required',
+                'since' => 'required | date | after:yesterday',
+                'until' => 'required | date | after:since',
                 'plate' => 'required',
             ],
             [
@@ -101,21 +99,24 @@ class OwnerProvider
                 'name.required' => 'El campo Nombre es obligatorio.',
                 'last_name.required' => 'El campo Apellidos es obligatorio.',
                 'dni.required' => 'El campo DNI es obligatorio.',
-                'email.required' => 'El campo Email es obligatorio.',
-                'photo.image' => 'El campo Foto debe ser una imagen.',
+                'owner.required' => 'El campo Propietario es obligatorio.',
                 'phone.required' => 'El campo Telefono es obligatorio.',
                 'vehicle.required' => 'El campo Vehículo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
                 'color.required' => 'El campo Color es obligatorio.',
                 'plate.required' => 'El campo Placa es obligatorio.',
                 'dni.unique' => 'El DNI ya existe.',
+                'since.required' => 'El campo Desde es obligatorio.',
+                'until.required' => 'El campo Hasta es obligatorio.',
+                'since.after' => 'El campo Desde debe ser posterior al día de ayer.',
+                'until.after' => 'El campo Hasta debe ser posterior al campo Desde.',
             ]
         );
 
         return $validator;
     }
 
-    public function validateEditData($request, $ownerId)
+    public function validateEditData($request, $tenantId)
     {
         $validator = validator(
             $request->all(),
@@ -123,14 +124,14 @@ class OwnerProvider
                 'lot' => 'required',
                 'name' => 'required',
                 'last_name' => 'required',
-                'dni' => ['required',  Rule::unique('owners')->ignore($ownerId)],
-                'email' => 'required',
+                'dni' => ['required',  Rule::unique('tenants')->ignore($tenantId)],
                 'phone' => 'required',
                 'vehicle' => 'required',
                 'model' => 'required',
                 'color' => 'required',
                 'plate' => 'required',
-                'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'since' => 'required | date | after:yesterday',
+                'until' => 'required | date | after:since',
             ],
             [
                 'lot.required' => 'El campo Lote es obligatorio.',
@@ -138,20 +139,22 @@ class OwnerProvider
                 'last_name.required' => 'El campo Apellidos es obligatorio.',
                 'dni.required' => 'El campo DNI es obligatorio.',
                 'dni.unique' => 'El DNI ya existe.',
-                'email.required' => 'El campo Email es obligatorio.',
                 'phone.required' => 'El campo Telefono es obligatorio.',
                 'vehicle.required' => 'El campo Vehímulo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
                 'color.required' => 'El campo Color es obligatorio.',
                 'plate.required' => 'El campo Placa es obligatorio.',
-                'photo.image' => 'El campo Foto debe ser una imagen.',
+                'since.required' => 'El campo Desde es obligatorio.',
+                'until.required' => 'El campo Hasta es obligatorio.',
+                'since.after' => 'El campo Desde debe ser posterior al día de ayer.',
+                'until.after' => 'El campo Hasta debe ser posterior al campo Desde.',
             ]
         );
 
         return $validator;
     }
 
-    public function updateOwner($request, $id)
+    public function updateTenant($request, $id)
     {
         $validator = $this->validateEditData($request, $id);
 
@@ -159,44 +162,45 @@ class OwnerProvider
             return $validator->errors();
         }
 
-        $owner = Owner::find($id);
-        $owner->lot = $request->lot;
-        $owner->name = $request->name;
-        $owner->last_name = $request->last_name;
-        $owner->dni = $request->dni;
-        $owner->email = $request->email;
-        $owner->phone = $request->phone;
-        $owner->vehicle = $request->vehicle;
-        $owner->carModel = $request->model;
-        $owner->color = $request->color;
-        $owner->plate = $request->plate;
-        $owner->photo = $this->usersProvider->processPhoto($request);
-        $owner->observation = $request->observation ?? '';
-        $owner->save();
+        $tenant = Tenant::find($id);
+        $tenant->lot = $request->lot;
+        $tenant->name = $request->name;
+        $tenant->last_name = $request->last_name;
+        $tenant->dni = $request->dni;
+        $tenant->owner = $request->owner;
+        $tenant->phone = $request->phone;
+        $tenant->vehicle = $request->vehicle;
+        $tenant->carModel = $request->model;
+        $tenant->color = $request->color;
+        $tenant->plate = $request->plate;
+        $tenant->since = $request->since;
+        $tenant->until = $request->until;
+        $tenant->observation = $request->observations ?? '';
+        $tenant->save();
         return true;
     }
 
-    public function deleteOwner($id)
+    public function deleteTenant($id)
     {
         // Asume que $request contiene el ID del propietario que deseas eliminar.
-        $owner = Owner::find($id); // Busca el Owner por ID
-        if (!$owner) {
+        $tenant = Tenant::find($id); // Busca el tenant por ID
+        if (!$tenant) {
             return false; // Si no existe, retornar false.
         }
 
-        $ownerDni = $owner->dni;
+        $tenantDni = $tenant->dni;
 
         // Usamos una transacción para asegurar que todo se elimine de manera consistente.
-        DB::transaction(function () use ($owner, $ownerDni) {
+        DB::transaction(function () use ($tenant, $tenantDni) {
             // Eliminar todos los autorizados que coincidan con el DNI del propietario.
-            Authorized::where('owner', $ownerDni)->delete();
+            Tenant::where('tenant', $tenantDni)->delete();
 
             // Eliminar el propietario.
-            $owner->delete();
+            $tenant->delete();
         });
 
         // Verificar si el propietario sigue existiendo
-        return Owner::find($id) === null; // Retornará true si fue eliminado exitosamente.
+        return Tenant::find($id) === null; // Retornará true si fue eliminado exitosamente.
 
     }
 }

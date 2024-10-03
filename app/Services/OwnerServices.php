@@ -42,11 +42,16 @@ class OwnerServices
 
     public function createOwner($request)
     {
-        $this->ownerProvider->createOwner($request);
+        return $this->ownerProvider->createOwner($request);
     }
 
     public function deleteOwner($request)
     {
-        $this->ownerProvider->deleteOwner($request);
+        return $this->ownerProvider->deleteOwner($request);
+    }
+
+    public function updateOwner($request, $owner)
+    {
+        return $this->ownerProvider->updateOwner($request, $owner);
     }
 }

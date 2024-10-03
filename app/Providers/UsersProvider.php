@@ -24,11 +24,11 @@ class UsersProvider
     public function getAllUsers($f)
     {
         if ($f == 0) {
-            $users = User::paginate(10);
+            $users = User::orderBy('created_at', 'desc')->paginate(10);
         } elseif ($f == 1) {
-            $users = User::where('role', 1)->paginate(10);
+            $users = User::where('role', 1)->orderBy('created_at', 'desc')->paginate(10);
         } elseif ($f == 2) {
-            $users = User::where('role', 0)->paginate(10);
+            $users = User::where('role', 0)->orderBy('created_at', 'desc')->paginate(10);
         }
 
         return $users;
@@ -206,22 +206,22 @@ class UsersProvider
         $validatedData = $this->validateData($request);
 
         if ($validatedData !== true) {
-            return redirect()->back()->withErrors($validatedData)->withInput();
+            return $validatedData;
+        } else {
+            // Crear el usuario
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->user = $request->input('user');
+            $user->role = $request->input('role');
+            $user->phone = $request->input('phone');
+            $user->last_name = $request->input('last_name');
+            $user->photo = $this->processPhoto($request);
+            $user->password = bcrypt($request->input('password'));
+            $user->save();
+
+            return $user;
         }
-
-        // Crear el usuario
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->user = $request->input('user');
-        $user->role = $request->input('role');
-        $user->phone = $request->input('phone');
-        $user->last_name = $request->input('last_name');
-        $user->photo = $this->processPhoto($request);
-        $user->password = bcrypt($request->input('password'));
-        $user->save();
-
-        return $user;
     }
 
     /**
@@ -254,21 +254,21 @@ class UsersProvider
         $validatedData = $this->validateEditData($request, $id);
 
         if ($validatedData !== true) {
-            return redirect()->back()->withErrors($validatedData)->withInput();
+            return $validatedData;
+        } else {
+            // Actualizar el usuario
+            $user = User::find($id);
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->user = $request->input('user');
+            $user->role = $request->input('role');
+            $user->phone = $request->input('phone');
+            $user->last_name = $request->input('last_name');
+            $user->photo = $this->processPhoto($request);
+            $user->save();
+
+            return 'ok';
         }
-
-        // Actualizar el usuario
-        $user = User::find($id);
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->user = $request->input('user');
-        $user->role = $request->input('role');
-        $user->phone = $request->input('phone');
-        $user->last_name = $request->input('last_name');
-        $user->photo = $this->processPhoto($request);
-        $user->save();
-
-        return 'ok';
     }
 
     /**

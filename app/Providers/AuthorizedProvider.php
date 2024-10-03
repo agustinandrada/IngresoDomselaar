@@ -4,10 +4,11 @@ namespace App\Providers;
 
 use App\Models\Authorized;
 use App\Models\Owner;
-use Illuminate\Support\Facades\DB;
+use App\Rules\MaxEntries;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rule;
 
-class OwnerProvider
+class AuthorizedProvider
 {
     protected UsersProvider $usersProvider;
 
@@ -15,27 +16,27 @@ class OwnerProvider
     {
         $this->usersProvider = $usersProvider;
     }
-    public function getOwners()
+    public function getAuthorizeds()
     {
-        $owners = Owner::orderBy('created_at', 'desc')->paginate(10);
-        return $owners;
+        $authorizeds = Authorized::orderBy('created_at', 'desc')->paginate(10);
+        return $authorizeds;
     }
 
     public function getByDni($dni)
     {
-        $owner = Owner::where('dni', $dni)->orderBy('created_at', 'desc')->paginate(10);
-        return $owner;
+        $authorized = Authorized::where('dni', $dni)->orderBy('created_at', 'desc')->paginate(10);
+        return $authorized;
     }
 
     public function getByLot($lot)
     {
-        $owner = Owner::where('lot', $lot)->orderBy('created_at', 'desc')->paginate(10);
-        return $owner;
+        $authorized = Authorized::where('lot', $lot)->orderBy('created_at', 'desc')->paginate(10);
+        return $authorized;
     }
 
     public function getByName($name)
     {
-        $owners = Owner::where(function ($query) use ($name) {
+        $authorizeds = Authorized::where(function ($query) use ($name) {
             $query->where('name', 'like', "%{$name}%")
                 ->orWhere('last_name', 'like', "%{$name}%")
                 ->orWhereRaw("CONCAT(name, ' ', last_name) LIKE ?", "%{$name}%");
@@ -43,38 +44,35 @@ class OwnerProvider
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return $owners;
+        return $authorizeds;
     }
 
-
-    public function getOwner($id)
+    public function getAuthorized($id)
     {
-        $owner = Owner::find($id);
-        return $owner;
+        $authorized = Authorized::find($id);
+        return $authorized;
     }
 
-    public function createOwner($request)
+    public function createAuthorized($request)
     {
         $validator = $this->validateData($request);
-
         if ($validator->fails()) {
             return $validator->errors();
         }
-
-        $owner = new Owner();
-        $owner->lot = $request->lot;
-        $owner->name = $request->name;
-        $owner->last_name = $request->last_name;
-        $owner->dni = $request->dni;
-        $owner->email = $request->email;
-        $owner->phone = $request->phone;
-        $owner->vehicle = $request->vehicle;
-        $owner->carModel = $request->model;
-        $owner->color = $request->color;
-        $owner->plate = $request->plate;
-        $owner->photo = $this->usersProvider->processPhoto($request);
-        $owner->observation = $request->observation ?? '';
-        $owner->save();
+        $authorized = new Authorized();
+        $authorized->lot = $request->lot;
+        $authorized->name = $request->name;
+        $authorized->last_name = $request->last_name;
+        $authorized->dni = $request->dni;
+        $authorized->email = $request->email;
+        $authorized->vehicle = $request->vehicle;
+        $authorized->carModel = $request->model;
+        $authorized->color = $request->color;
+        $authorized->plate = $request->plate;
+        $authorized->photo = $this->usersProvider->processPhoto($request);
+        $authorized->observation = $request->observation ?? '';
+        $authorized->owner = $request->owner;
+        $authorized->save();
 
         return true;
     }
@@ -87,10 +85,10 @@ class OwnerProvider
                 'lot' => 'required',
                 'name' => 'required',
                 'last_name' => 'required',
-                'dni' => 'required|unique:owners',
+                'owner' => ['required', 'exists:owners,dni', new MaxEntries('authorizeds', 'owner', 3)],
+                'dni' => 'required|unique:authorizeds',
                 'email' => 'required',
                 'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'phone' => 'required',
                 'vehicle' => 'required',
                 'model' => 'required',
                 'color' => 'required',
@@ -103,19 +101,20 @@ class OwnerProvider
                 'dni.required' => 'El campo DNI es obligatorio.',
                 'email.required' => 'El campo Email es obligatorio.',
                 'photo.image' => 'El campo Foto debe ser una imagen.',
-                'phone.required' => 'El campo Telefono es obligatorio.',
                 'vehicle.required' => 'El campo Vehículo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
                 'color.required' => 'El campo Color es obligatorio.',
                 'plate.required' => 'El campo Placa es obligatorio.',
                 'dni.unique' => 'El DNI ya existe.',
+                'owner.max_entries' => 'El número de autorizados ha alcanzado el límite permitido para este propietario.',
+                'owner.exists' => 'El propietario no existe.',
             ]
         );
 
         return $validator;
     }
 
-    public function validateEditData($request, $ownerId)
+    public function validateEditData($request, $authorizedId)
     {
         $validator = validator(
             $request->all(),
@@ -123,9 +122,9 @@ class OwnerProvider
                 'lot' => 'required',
                 'name' => 'required',
                 'last_name' => 'required',
-                'dni' => ['required',  Rule::unique('owners')->ignore($ownerId)],
-                'email' => 'required',
-                'phone' => 'required',
+                'dni' => ['required', Rule::unique('authorizeds')->ignore($authorizedId)],
+                'owner' => ['required', new MaxEntries('authorizeds', 'owner', 3)], // Elimina el espacio antes de "exists"
+                'email' => 'required|email',
                 'vehicle' => 'required',
                 'model' => 'required',
                 'color' => 'required',
@@ -139,64 +138,64 @@ class OwnerProvider
                 'dni.required' => 'El campo DNI es obligatorio.',
                 'dni.unique' => 'El DNI ya existe.',
                 'email.required' => 'El campo Email es obligatorio.',
-                'phone.required' => 'El campo Telefono es obligatorio.',
                 'vehicle.required' => 'El campo Vehímulo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
                 'color.required' => 'El campo Color es obligatorio.',
                 'plate.required' => 'El campo Placa es obligatorio.',
                 'photo.image' => 'El campo Foto debe ser una imagen.',
+                'owner.max_entries' => 'El número de autorizados ha alcanzado el límite permitido para este propietario.',
+                'owner.exists' => 'El propietario no existe.',
             ]
         );
 
         return $validator;
     }
 
-    public function updateOwner($request, $id)
+    public function updateAuthorized($request, $id)
     {
         $validator = $this->validateEditData($request, $id);
-
         if ($validator->fails()) {
             return $validator->errors();
         }
-
-        $owner = Owner::find($id);
-        $owner->lot = $request->lot;
-        $owner->name = $request->name;
-        $owner->last_name = $request->last_name;
-        $owner->dni = $request->dni;
-        $owner->email = $request->email;
-        $owner->phone = $request->phone;
-        $owner->vehicle = $request->vehicle;
-        $owner->carModel = $request->model;
-        $owner->color = $request->color;
-        $owner->plate = $request->plate;
-        $owner->photo = $this->usersProvider->processPhoto($request);
-        $owner->observation = $request->observation ?? '';
-        $owner->save();
+        $authorized = Authorized::find($id);
+        $authorized->lot = $request->lot;
+        $authorized->name = $request->name;
+        $authorized->last_name = $request->last_name;
+        $authorized->dni = $request->dni;
+        $authorized->email = $request->email;
+        $authorized->vehicle = $request->vehicle;
+        $authorized->carModel = $request->model;
+        $authorized->color = $request->color;
+        $authorized->plate = $request->plate;
+        $authorized->photo = $this->usersProvider->processPhoto($request);
+        $authorized->observation = $request->observation ?? '';
+        $authorized->owner = $request->owner;
+        $authorized->save();
         return true;
     }
 
-    public function deleteOwner($id)
+    public function deleteAuthorized($request)
     {
-        // Asume que $request contiene el ID del propietario que deseas eliminar.
-        $owner = Owner::find($id); // Busca el Owner por ID
-        if (!$owner) {
-            return false; // Si no existe, retornar false.
+        $authorized = Authorized::find($request);
+        $authorized->delete();
+
+        if (Authorized::find($request)) {
+            return false;
+        } else {
+            return true;
         }
+    }
 
-        $ownerDni = $owner->dni;
-
-        // Usamos una transacción para asegurar que todo se elimine de manera consistente.
-        DB::transaction(function () use ($owner, $ownerDni) {
-            // Eliminar todos los autorizados que coincidan con el DNI del propietario.
-            Authorized::where('owner', $ownerDni)->delete();
-
-            // Eliminar el propietario.
-            $owner->delete();
-        });
-
-        // Verificar si el propietario sigue existiendo
-        return Owner::find($id) === null; // Retornará true si fue eliminado exitosamente.
-
+    public function getDniOwners(): array
+    {
+        $owners = Owner::all();
+        $dniOwners = [];
+        foreach ($owners as $owner) {
+            $dniOwners[$owner->dni] = [
+                'id' => $owner->id,
+                'lot' => $owner->lot,
+            ];
+        }
+        return $dniOwners;
     }
 }
