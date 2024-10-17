@@ -87,7 +87,7 @@
                                 <div class="mb-3"><label class="form-label" for="username"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>LOTE</strong></label><input
                                         class="form-control" type="text" name="lot" value="{{ old('lot') }}"
-                                        required></div>
+                                        required id="lot" readonly></div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3"><label class="form-label" for="first_name"
@@ -140,6 +140,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

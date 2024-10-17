@@ -2,6 +2,8 @@
 <html data-bs-theme="light" lang="es">
 
 @include('layouts.head')
+<script src="{{ asset('js/authorized.js') }}"></script>
+<script src="{{ asset('js/visit.js') }}"></script>
 
 <body>
     <div class="d-flex flex-column min-vh-100">
@@ -9,11 +11,24 @@
         <div class="container-fluid" style="margin-top: 42px;">
             <div class="card shadow mb-3">
                 <div class="card-header py-3">
-                    <h1 style="font-family: Montserrat, sans-serif;font-size: 28px;font-weight: bold;">Agregar Visita
+                    <h1 style="font-family: Montserrat, sans-serif;font-size: 28px;font-weight: bold;">Agregar Inquilino
                     </h1>
+                    <button class="btn btn-primary" style="background: rgb(177,155,118); border-width: 0px" type="button"
+                        onclick="window.history.back();"><i class="fas fa-arrow-left"></i>
+                        Regresar</button>
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ route('store-visitor') }}" enctype="multipart/form-data">
+                        @csrf
                         <div class="row" style="margin-bottom: 25px;text-align: left;">
                             <div class="col-sm-8 col-md-8 col-lg-9 col-xl-10 col-xxl-10 align-self-center"
                                 style="width: 100%;">
@@ -21,89 +36,112 @@
                                     <div class="col-md-12 text-start">
                                         <div class="mb-3"><label class="form-label" for="email"
                                                 style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>NOMBRE</strong></label><input
-                                                class="form-control" type="text" name="nombre"
+                                                class="form-control" type="text" name="name" required
                                                 style="font-family: Montserrat, sans-serif;font-size: 13px;"></div>
                                     </div>
                                     <div class="col-md-12 text-start">
                                         <div class="mb-3"><label class="form-label" for="username"
                                                 style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>APELLIDO</strong></label><input
-                                                class="form-control" type="text" name="apellido"></div>
+                                                class="form-control" type="text" name="last_name" required></div>
                                     </div>
-                                    <div class="col-md-12 text-start">
+                                    <div class="col-md-12 col-xl-6 text-start">
                                         <div class="mb-3"><label class="form-label" for="username"
                                                 style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>DNI</strong></label><input
-                                                class="form-control" type="number" name="dni"></div>
+                                                class="form-control" type="number" name="dni" required></div>
+                                    </div>
+
+                                    <div class="col-md-6 text-start">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="owner"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>PROPIETARIO
+                                                    QUE AUTORIZA LA VISITA</strong>
+                                            </label>
+                                            <select class="form-select" name="owner" required id="owner">
+                                                @foreach ($owners as $key => $value)
+                                                    <option value="{{ $value['id'] }}" data-lot="{{ $value['lot'] }}"
+                                                        {{ old('owner') == $value['id'] ? 'selected' : '' }} selected>
+                                                        {{ $key }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-start">
+                                        <div class="mb-3"><label class="form-label" for="lot"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>LOTE</strong></label>
+                                            <input class="form-control" type="text" name="lot"
+                                                value="{{ old('lot') }}" id="lot" required readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-start">
+                                        <div class="mb-3"><label class="form-label" for="vehicle"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>VEHÍCULO
+                                                    MARCA</strong></label><input class="form-control" type="text"
+                                                name="vehicle" required></div>
+                                    </div>
+                                    <div class="col-md-6 col-xl-2 text-start">
+                                        <div class="mb-3"><label class="form-label" for="model"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>MODELO</strong></label><input
+                                                class="form-control" type="text" name="model" required></div>
+                                    </div>
+                                    <div class="col-md-6 col-xl-2">
+                                        <div class="mb-3"><label class="form-label" for="plate"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>PATENTE</strong></label><input
+                                                class="form-control" type="text" name="plate" required></div>
+                                        <div class="mb-3">
+
+                                        </div>
+                                    </div>
+                                    <div class="col"><label class="form-label" for="color"
+                                            style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>COLOR</strong></label><input
+                                            class="form-control" type="text" name="color" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3"><label class="form-label" for="day"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>VISITA
+                                                    DEL
+                                                    DÍA
+                                                    (24 HS)</strong></label><select class="form-select" name="day"
+                                                id="day" required>
+                                                <option value="0" selected>SI</option>
+                                                <option value="1">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="col" id="since-div" style="display: none;"><label
+                                                class="form-label" for="address"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>INICIO
+                                                    DE
+                                                    VISITA</strong></label><input class="form-control" type="date"
+                                                name="since" id="since">
+                                        </div>
+                                        <div class="col" id="until-div" style="display: none;"><label
+                                                class="form-label" for="address"
+                                                style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>FINALIZACIÓN
+                                                    DE
+                                                    VISITA</strong></label><input class="form-control" type="date"
+                                                name="until" id="until">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-xl-12" style="width: 100%;">
+                                        <div class="mb-3"></div><label class="form-label" for="observations"
+                                            style="font-family: Montserrat, sans-serif;font-size: 13px;margin-bottom: -4px;"><strong>OBSERVACIONES</strong></label>
+                                        <textarea class="form-control" style="height: 130px;width: 100%;" name="observations"></textarea>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 text-start">
-                                <div class="mb-3"><label class="form-label" for="username"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>PROPIETARIO
-                                            QUE
-                                            AUTORIZA LA VISITA</strong></label><select class="form-select">
-                                        <optgroup label="This is a group">
-                                            <option value="12" selected="">This is item 1</option>
-                                            <option value="13">This is item 2</option>
-                                            <option value="14">This is item 3</option>
-                                        </optgroup>
-                                    </select></div>
-                            </div>
-                            <div class="col-md-6 text-start">
-                                <div class="mb-3"><label class="form-label" for="username"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>LOTE</strong></label><input
-                                        class="form-control" type="text" name="lote"></div>
-                            </div>
-                            <div class="col-md-6 text-start">
-                                <div class="mb-3"><label class="form-label" for="username"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>VEHÍCULO
-                                            MARCA</strong></label><input class="form-control" type="text"
-                                        name="vehiculo marca"></div>
-                            </div>
-                            <div class="col-md-6 col-xl-2 text-start">
-                                <div class="mb-3"><label class="form-label" for="username"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>MODELO</strong></label><input
-                                        class="form-control" type="text" name="modelo"></div>
-                            </div>
-                            <div class="col-md-6 col-xl-2">
-                                <div class="mb-3"><label class="form-label" for="first_name"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>PATENTE</strong></label><input
-                                        class="form-control" type="text" name="patente"></div>
-                                <div class="mb-3"></div>
-                            </div>
-                            <div class="col"><label class="form-label" for="first_name"
-                                    style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>COLOR</strong></label><input
-                                    class="form-control" type="text" name="color"></div>
-                            <div class="col-md-6">
-                                <div class="mb-3"><label class="form-label" for="city"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>VISITA DEL
-                                            DÍA
-                                            (24 HS)</strong></label><select class="form-select">
-                                        <option value="12" selected="">SI</option>
-                                        <option value="13">NO</option>
-                                    </select></div>
-                            </div>
-                            <div class="col"><label class="form-label" for="address"
-                                    style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>INICIO DE
-                                        VISITA</strong></label><input class="form-control" type="date"
-                                    name="fecha inicio visita"></div>
-                            <div class="col"><label class="form-label" for="address"
-                                    style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>FINALIZACIÓN
-                                        DE
-                                        VISITA</strong></label><input class="form-control" type="date"
-                                    name="fecha fin visita"></div>
-                            <div class="col-md-6 col-xl-12" style="width: 100%;">
-                                <div class="mb-3"></div><label class="form-label" for="city"
-                                    style="font-family: Montserrat, sans-serif;font-size: 13px;margin-bottom: -4px;"><strong>OBSERVACIONES</strong></label>
-                                <textarea class="form-control" style="height: 130px;width: 100%;" name="observaciones visita"></textarea>
-                            </div>
-                        </div>
-                    </form><button class="btn btn-primary" type="button"
-                        style="background: rgb(177,155,118);">Guardar</button>
+                                <button class="btn btn-primary mt-2" type="submit" id="submitBtn" name="submitBtn"
+                                    value="submitBtn"
+                                    style="background: rgb(177,155,118); border-color: rgb(177,155,118);">Guardar</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

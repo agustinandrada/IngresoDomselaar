@@ -50,6 +50,8 @@ class AuthorizedProvider
     public function getAuthorized($id)
     {
         $authorized = Authorized::find($id);
+        $owner = Owner::find($authorized->owner)->first();
+        $authorized->owner = $owner->dni;
         return $authorized;
     }
 
@@ -64,7 +66,7 @@ class AuthorizedProvider
         $authorized->name = $request->name;
         $authorized->last_name = $request->last_name;
         $authorized->dni = $request->dni;
-        $authorized->email = $request->email;
+        $authorized->email = $request->phone;
         $authorized->vehicle = $request->vehicle;
         $authorized->carModel = $request->model;
         $authorized->color = $request->color;
@@ -85,9 +87,9 @@ class AuthorizedProvider
                 'lot' => 'required',
                 'name' => 'required',
                 'last_name' => 'required',
-                'owner' => ['required', 'exists:owners,dni', new MaxEntries('authorizeds', 'owner', 3)],
+                'owner' => ['required', 'exists:owners,id', new MaxEntries('authorizeds', 'owner', 3)],
                 'dni' => 'required|unique:authorizeds',
-                'email' => 'required',
+                'phone' => 'required',
                 'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'vehicle' => 'required',
                 'model' => 'required',
@@ -99,7 +101,7 @@ class AuthorizedProvider
                 'name.required' => 'El campo Nombre es obligatorio.',
                 'last_name.required' => 'El campo Apellidos es obligatorio.',
                 'dni.required' => 'El campo DNI es obligatorio.',
-                'email.required' => 'El campo Email es obligatorio.',
+                'phone.required' => 'El campo Telefono es obligatorio.',
                 'photo.image' => 'El campo Foto debe ser una imagen.',
                 'vehicle.required' => 'El campo Vehículo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
@@ -124,7 +126,7 @@ class AuthorizedProvider
                 'last_name' => 'required',
                 'dni' => ['required', Rule::unique('authorizeds')->ignore($authorizedId)],
                 'owner' => ['required', new MaxEntries('authorizeds', 'owner', 3)], // Elimina el espacio antes de "exists"
-                'email' => 'required|email',
+                'phone' => 'required',
                 'vehicle' => 'required',
                 'model' => 'required',
                 'color' => 'required',
@@ -137,7 +139,7 @@ class AuthorizedProvider
                 'last_name.required' => 'El campo Apellidos es obligatorio.',
                 'dni.required' => 'El campo DNI es obligatorio.',
                 'dni.unique' => 'El DNI ya existe.',
-                'email.required' => 'El campo Email es obligatorio.',
+                'phone.required' => 'El campo Telefono es obligatorio.',
                 'vehicle.required' => 'El campo Vehímulo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
                 'color.required' => 'El campo Color es obligatorio.',
@@ -162,7 +164,7 @@ class AuthorizedProvider
         $authorized->name = $request->name;
         $authorized->last_name = $request->last_name;
         $authorized->dni = $request->dni;
-        $authorized->email = $request->email;
+        $authorized->email = $request->phone;
         $authorized->vehicle = $request->vehicle;
         $authorized->carModel = $request->model;
         $authorized->color = $request->color;

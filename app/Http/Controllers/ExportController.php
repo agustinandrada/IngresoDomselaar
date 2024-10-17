@@ -26,4 +26,9 @@ class ExportController extends Controller
     {
         return Excel::download(new Exports('tenants'), 'Inquilinos.xlsx');
     }
+
+    public function exportHistory()
+    {
+        return Excel::download(new Exports('history'), 'Historial_de_resgistro.xlsx');
+    }
 }

@@ -70,7 +70,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Redirige al panel de control con un mensaje de éxito si el inicio de sesión es exitoso.
-            return redirect()->route('dashboard')->with('success', 'Logged in successfully!');
+            return redirect()->route('dashboard');
         }
 
         // Redirige de vuelta con un mensaje de error si las credenciales son inválidas.

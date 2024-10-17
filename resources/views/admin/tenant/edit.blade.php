@@ -2,7 +2,7 @@
 <html data-bs-theme="light" lang="es">
 
 @include('layouts.head')
-<script src="{{ asset('js/profilePhoto.js') }}"></script>
+<script src="{{ asset('js/authorized.js') }}"></script>
 
 <body>
     <div class="d-flex flex-column min-vh-100">
@@ -10,10 +10,6 @@
         @if (Session::has('success'))
             <div class="alert alert-success" role="alert">
                 {{ Session::get('success') }}
-            </div>
-        @elseif (Session::has('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ Session::get('error') }}
             </div>
         @elseif (Session::has('errors'))
             <div class="alert alert-danger" role="alert">
@@ -82,7 +78,7 @@
                                 <div class="mb-3"><label class="form-label" for="lot"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>LOTE</strong></label>
                                     <input class="form-control" type="text" name="lot"
-                                        value="{{ $tenant->lot }}" id="lot" required>
+                                        value="{{ $tenant->lot }}" id="lot" required readonly>
                                 </div>
                             </div>
                             <div class="col-md-6 text-start">
@@ -135,6 +131,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

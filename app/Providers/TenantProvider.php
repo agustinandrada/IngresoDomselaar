@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Owner;
 use App\Models\Tenant;
 use App\Rules\MaxEntries;
 use Illuminate\Validation\Rule;
@@ -49,6 +50,8 @@ class TenantProvider
     public function getTenant($id)
     {
         $tenant = Tenant::find($id);
+        $owner = Owner::find($tenant->owner)->first();
+        $tenant->owner = $owner->dni;
         return $tenant;
     }
 
@@ -85,7 +88,7 @@ class TenantProvider
                 'name' => 'required',
                 'last_name' => 'required',
                 'dni' =>  'required | unique:tenants,dni',
-                'owner' => 'required',
+                'owner' => 'required | exists:owners,id',
                 'phone' => 'required',
                 'vehicle' => 'required',
                 'model' => 'required',
@@ -125,12 +128,13 @@ class TenantProvider
                 'name' => 'required',
                 'last_name' => 'required',
                 'dni' => ['required',  Rule::unique('tenants')->ignore($tenantId)],
+                'owner' => 'required | exists:owners,id',
                 'phone' => 'required',
                 'vehicle' => 'required',
                 'model' => 'required',
                 'color' => 'required',
                 'plate' => 'required',
-                'since' => 'required | date | after:yesterday',
+                'since' => 'required | date ',
                 'until' => 'required | date | after:since',
             ],
             [
@@ -139,6 +143,8 @@ class TenantProvider
                 'last_name.required' => 'El campo Apellidos es obligatorio.',
                 'dni.required' => 'El campo DNI es obligatorio.',
                 'dni.unique' => 'El DNI ya existe.',
+                'owner.required' => 'El campo Propietario es obligatorio.',
+                'owner.exists' => 'El campo Propietario no existe.',
                 'phone.required' => 'El campo Telefono es obligatorio.',
                 'vehicle.required' => 'El campo Vehímulo es obligatorio.',
                 'model.required' => 'El campo Marca es obligatorio.',
@@ -182,25 +188,16 @@ class TenantProvider
 
     public function deleteTenant($id)
     {
-        // Asume que $request contiene el ID del propietario que deseas eliminar.
-        $tenant = Tenant::find($id); // Busca el tenant por ID
+        $tenant = Tenant::find($id);
         if (!$tenant) {
-            return false; // Si no existe, retornar false.
+            return false;
         }
+        $tenant->delete();
+        return true;
+    }
 
-        $tenantDni = $tenant->dni;
-
-        // Usamos una transacción para asegurar que todo se elimine de manera consistente.
-        DB::transaction(function () use ($tenant, $tenantDni) {
-            // Eliminar todos los autorizados que coincidan con el DNI del propietario.
-            Tenant::where('tenant', $tenantDni)->delete();
-
-            // Eliminar el propietario.
-            $tenant->delete();
-        });
-
-        // Verificar si el propietario sigue existiendo
-        return Tenant::find($id) === null; // Retornará true si fue eliminado exitosamente.
-
+    public function getExpiredTenants()
+    {
+        return Tenant::where('until', '<', date('Y-m-d'))->get();
     }
 }

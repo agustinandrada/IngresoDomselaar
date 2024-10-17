@@ -9,6 +9,11 @@
             {{ Session::get('success') }}
         </div>
     @endif
+    @if (session('message'))
+        <div class="alert alert-warning" role="alert">
+            {{ Session::get('message') }}
+        </div>
+    @endif
     <section class="register-photo" style="background-color: transparent;padding-top: 0px;">
         <div class="form-container" style="margin-top: 40px;">
             <div class="image-holder"
@@ -52,6 +57,7 @@
             </form>
         </div>
     </section>
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

@@ -19,7 +19,7 @@
             <div class="card shadow mb-3">
                 <div class="card-header py-3">
                     <h1 style="font-family: Montserrat, sans-serif;font-size: 28px;font-weight: bold;">
-                        {{ $tenant->name }}
+                        {{ $tenant->name }} {{ $tenant->last_name }}
                     </h1>
                     <button class="btn btn-primary" style="background: rgb(177,155,118); border-width: 0px"
                         type="button" onclick="window.history.back();"><i class="fas fa-arrow-left"></i>
@@ -119,6 +119,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

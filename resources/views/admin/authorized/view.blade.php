@@ -54,9 +54,9 @@
                         </div>
                         <div class="col-md-6 text-start">
                             <div class="mb-3"><label class="form-label" for="first_name"
-                                    style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>EMAIL</strong></label><input
-                                    class="form-control" type="email" name="email" readonly
-                                    value="{{ $authorized->email }}">
+                                    style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>TELEFONO</strong></label><input
+                                    class="form-control" type="phone" name="phone" readonly
+                                    value="{{ $authorized->phone }}">
                             </div>
 
                         </div>
@@ -116,6 +116,7 @@
         </div>
         <div class="d-flex flex-column min-vh-100">
             @include('modules.footer')
+            @include('layouts.bodyScripts')
 </body>
 
 </html>

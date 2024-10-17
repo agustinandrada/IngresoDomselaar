@@ -74,6 +74,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

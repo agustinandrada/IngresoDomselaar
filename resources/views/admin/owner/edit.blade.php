@@ -57,28 +57,30 @@
                                                 <strong>NOMBRE</strong>
                                             </label>
                                             <input class="form-control" type="text" name="name"
-                                                style="font-family: Montserrat, sans-serif;"
-                                                value="{{ $owner->name }}">
+                                                style="font-family: Montserrat, sans-serif;" value="{{ $owner->name }}"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-md-12 text-start">
                                         <div class="mb-3"><label class="form-label" for="username"
                                                 style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>APELLIDO</strong></label><input
                                                 class="form-control" type="text" name="last_name"
-                                                value="{{ $owner->last_name }}"></div>
+                                                value="{{ $owner->last_name }}" required></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 text-start">
                                 <div class="mb-3"><label class="form-label" for="username"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>DNI</strong></label><input
-                                        class="form-control" type="number" name="dni" value="{{ $owner->dni }}">
+                                        class="form-control" type="number" name="dni" value="{{ $owner->dni }}"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-md-6 text-start">
                                 <div class="mb-3"><label class="form-label" for="username"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>LOTE</strong></label><input
-                                        class="form-control" type="text" name="lot" value="{{ $owner->lot }}">
+                                        class="form-control" type="text" name="lot" value="{{ $owner->lot }}"
+                                        required readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -97,34 +99,34 @@
                                 <div class="mb-3"><label class="form-label" for="country"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>VEHÍCULO
                                             MARCA</strong></label><input class="form-control" type="text"
-                                        name="vehicle" value="{{ $owner->vehicle }}"></div>
+                                        name="vehicle" value="{{ $owner->vehicle }}" required></div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3"><label class="form-label" for="city"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>MODELO</strong></label><input
                                         class="form-control" type="text" name="model"
-                                        value="{{ $owner->carModel }}">
+                                        value="{{ $owner->carModel }}" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3"><label class="form-label" for="city"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>PATENTE</strong></label><input
                                         class="form-control" type="text" name="plate"
-                                        value="{{ $owner->plate }}">
+                                        value="{{ $owner->plate }}" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3"><label class="form-label" for="address"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>COLOR</strong></label><input
                                         class="form-control" type="text" name="color"
-                                        value="{{ $owner->color }}">
+                                        value="{{ $owner->color }}" required>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3"><label class="form-label" for="city"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>OBSERVACIONES</strong></label>
-                                    <textarea class="form-control" style="height: 130px;" name="observation">{{ $owner->observation }}</textarea>
+                                    <textarea class="form-control" style="height: 130px;" name="observation" required>{{ $owner->observation }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -136,6 +138,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

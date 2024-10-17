@@ -9,7 +9,7 @@
             <div class="col-12 col-sm-6 col-md-6">
                 <p class="text-end"
                     style="margin-top: 5%;margin-bottom: 8%%;font-size: 1em;font-family: Montserrat, sans-serif;color: var(--bs-body-bg);">
-                    <a href="mailto:soporte@argdg.com" style="color: var(--bs-body-bg);font-size: 14px;">Soporte
+                    <a href="/estancias/technical-support" style="color: var(--bs-body-bg);font-size: 14px;">Soporte
                         Tecnico</a>
                 </p>
             </div>

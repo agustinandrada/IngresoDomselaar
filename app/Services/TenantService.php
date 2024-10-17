@@ -138,4 +138,9 @@ class TenantService
     {
         return $this->tenantProvider->updateTenant($request, $tenant);
     }
+
+    public function getExpiredTenants()
+    {
+        return  $this->tenantProvider->getExpiredTenants();
+    }
 }

@@ -37,8 +37,8 @@
                             <a href="{{ route('authorized-list') }}" class="btn btn-secondary btn-sm"
                                 style="border-width: 0px; margin-top: 20px; border-radius: 5px;">Reestablecer</a>
                             <a href="{{ route('export-authorized') }}" target="_blank" class="btn btn-success btn-sm"
-                                style="border-width: 0px; margin-top: 20px; border-radius: 5px;">
-                                Descargar Excel <i class="fa fa-file-excel-o"></i>
+                                style="border-width: 0px; margin-top: 20px; border-radius: 5px;"><i
+                                    class="fa fa-file-excel-o"></i>
                             </a>
                         </form>
                         <div class="col-12 col-sm-7 col-md-6 text-end" style="margin: 0px;padding: 5px 15px;"><i
@@ -64,7 +64,7 @@
                                         <th class="text-start"
                                             style="font-family: Montserrat, sans-serif;font-size: 13.4px;">lote</th>
                                         <th class="text-start"
-                                            style="font-family: Montserrat, sans-serif;font-size: 13.4px;">email</th>
+                                            style="font-family: Montserrat, sans-serif;font-size: 13.4px;">telefono</th>
                                         <th class="text-center filter-false sorter-false">Acciones</th>
                                     </tr>
                                 </thead>
@@ -125,6 +125,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

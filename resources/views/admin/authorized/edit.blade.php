@@ -3,6 +3,7 @@
 
 @include('layouts.head')
 <script src="{{ asset('js/profilePhoto.js') }}"></script>
+<script src="{{ asset('js/authorized.js') }}"></script>
 
 <body>
     <div class="d-flex flex-column min-vh-100">
@@ -79,9 +80,9 @@
                             </div>
                             <div class="col-md-6 text-start">
                                 <div class="mb-3"><label class="form-label" for="first_name"
-                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>EMAIL</strong></label><input
-                                        class="form-control" type="email" name="email" required
-                                        value="{{ $authorized->email }}">
+                                        style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>TELEFONO</strong></label><input
+                                        class="form-control" type="phone" name="phone" required
+                                        value="{{ $authorized->phone }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -101,8 +102,8 @@
                             <div class="col-md-6">
                                 <div class="mb-3"><label class="form-label" for="username"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;"><strong>LOTE</strong></label><input
-                                        class="form-control" type="text" name="lot"
-                                        value="{{ $authorized->lot }}" required>
+                                        class="form-control" type="text" name="lot" id="lot"
+                                        value="{{ $authorized->lot }}" required readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -145,6 +146,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

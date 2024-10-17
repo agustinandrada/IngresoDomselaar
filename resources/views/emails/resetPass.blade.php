@@ -78,6 +78,7 @@
             <p style="font-family: 'Montserrat', Arial, sans-serif;">¡Gracias y que tenga un excelente día!</p>
         </div>
     </div>
+    @include('layouts.bodyScripts')
 </body>
 
 

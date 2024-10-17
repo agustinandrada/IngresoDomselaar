@@ -57,13 +57,13 @@ class TenantController extends Controller
         if ($validator !== true) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        return redirect()->route('tenant-list')->with('success', 'Propietario creado correctamente');
+        return redirect()->route('tenant-list')->with('success', 'Inquilino creado correctamente');
     }
 
     public function delete($id)
     {
         $this->tenantService->deleteTenant($id);
-        return redirect()->route('tenant-list')->with('success', 'Propietario eliminado correctamente');
+        return redirect()->route('tenant-list')->with('success', 'Inquilino eliminado correctamente');
     }
 
     public function edit($id)
@@ -79,7 +79,7 @@ class TenantController extends Controller
         if ($validator !== true) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        return redirect()->route('tenant-list')->with('success', 'Propietario actualizado correctamente');
+        return redirect()->route('tenant-list')->with('success', 'Inquilino actualizado correctamente');
     }
 
     public function view($id)

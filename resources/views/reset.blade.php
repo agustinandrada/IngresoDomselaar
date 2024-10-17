@@ -30,6 +30,7 @@
             </form>
         </div>
     </section>
+    @include('layouts.bodyScripts')
 </body>
 
 </html>

@@ -2,56 +2,90 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Visitor;
+use App\Services\AuthorizedService;
 use App\Services\VisitorServices;
 use Illuminate\Http\Request;
 
 class VisitorController extends Controller
 {
-    protected $visitorServices;
+    protected $visitorService;
+    protected $authorizedService;
 
 
-    public function __construct(VisitorServices $visitorService)
+    public function __construct(VisitorServices $visitorServices, AuthorizedService $authorizedService)
     {
-        $this->visitorServices = $visitorService;
+        $this->visitorService = $visitorServices;
+        $this->authorizedService = $authorizedService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.visitor.list');
+        if ($request->filter != null) {
+            $filter = $request->filter;
+            $search = $request->search;
+            switch ($filter) {
+                case 'dni':
+                    $visitors = $this->visitorService->getByDni($request->search);
+                    break;
+                case 'lot':
+                    $visitors = $this->visitorService->getByLot($request->search);
+                    break;
+                case 'name':
+                    $visitors = $this->visitorService->getByName($request->search);
+                    break;
+                default:
+                    $visitors = $this->visitorService->getVisitors();
+                    break;
+            }
+        } else {
+            $visitors = $this->visitorService->getVisitors();
+            $filter = 'dni';
+            $search = '';
+        }
+        return view('admin.visitor.list', compact('visitors', 'filter', 'search'));
     }
 
     public function create()
     {
-        return view('admin.visitor.create');
+        $owners = $this->authorizedService->getDniOwners();
+        return view('admin.visitor.create', compact('owners'));
     }
 
     public function store(Request $request)
     {
-        $this->visitorServices->store($request);
-        return redirect()->back();
+        $validator = $this->visitorService->createVisitor($request);
+        if ($validator !== true) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        return redirect()->route('visitor-list')->with('success', 'Visita creada correctamente');
     }
 
-    public function view($id)
+    public function delete($id)
     {
-        $data = $this->visitorServices->view($id);
-        return view('admin.visitor.view', compact('data'));
+        $this->visitorService->deleteVisitor($id);
+        return redirect()->route('visitor-list')->with('success', 'Visita eliminada correctamente');
     }
 
     public function edit($id)
     {
-        $data = $this->visitorServices->edit($id);
-        return view('admin.visitor.edit', compact('data'));
+        $visitor = $this->visitorService->getVisitor($id);
+        $owners = $this->authorizedService->getDniOwners();
+        return view('admin.visitor.edit', compact('visitor', 'owners'));
     }
 
     public function update(Request $request, $id)
     {
-        $this->visitorServices->update($request, $id);
-        return redirect()->back();
+        $validator = $this->visitorService->updateVisitor($request, $id);
+        if ($validator !== true) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        return redirect()->route('visitor-list')->with('success', 'Visita actualizada correctamente');
     }
 
-    public function destroy($id)
+    public function view($id)
     {
-        $this->visitorServices->destroy($id);
-        return redirect()->back();
+        $visitor = $this->visitorService->getVisitor($id);
+        return view('admin.visitor.view', compact('visitor'));
     }
 }

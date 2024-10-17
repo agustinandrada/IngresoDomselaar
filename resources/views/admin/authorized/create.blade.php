@@ -17,11 +17,6 @@
                         onclick="window.history.back();"><i class="fas fa-arrow-left"></i>
                         Regresar</button>
                 </div>
-                @if (Session::has('errors'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ Session::get('errors') }}
-                    </div>
-                @endif
                 @if ($errors->any())
                     <div class="alert alert-danger" role="alert">
                         <ul>
@@ -83,9 +78,9 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="first_name"
                                         style="font-family: Montserrat, sans-serif;font-size: 13px;">
-                                        <strong>EMAIL</strong>
+                                        <strong>TELEFONO</strong>
                                     </label>
-                                    <input class="form-control" type="email" name="email" required
+                                    <input class="form-control" type="phone" name="phone" required
                                         value="{{ old('email') }}">
                                 </div>
                             </div>
@@ -152,6 +147,7 @@
         </div>
     </div>
     @include('modules.footer')
+    @include('layouts.bodyScripts')
 </body>
 
 </html>
