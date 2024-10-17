@@ -5,7 +5,7 @@
 
 <body>
     @include('modules.nav')
-    @if ($eliminados > 0 || $visitas > 0 || $pendientes > 0)
+    @if ($eliminados > 0 || $visitas > 0 || count($pendientes) > 0)
         <script>
             // Asignar las variables directamente a JavaScript
             var eliminados = {!! json_encode($eliminados) !!};
